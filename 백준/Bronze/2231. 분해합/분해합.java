@@ -1,42 +1,50 @@
-import java.util.ArrayList;
-import java.util.List;
+
+
 import java.util.Scanner;
 
-import org.omg.PortableInterceptor.SUCCESSFUL;
+/* #2231. 분해합
+ * 자연수 N의 분해합 : N과 N을 이루는 각 자리수의 합
+ * M의 분해합이  N이면, M은 N의 생성자.
+ * 245의 분해합은 245+2+4+5, 즉 245는 256의 생성자
+ * 
+ * 생성자가 없는경우 0을 출력한다..
+ * 
+ * N이 주어졌을때 N의 가장 작은 생성자를 구하라
+ * 1 <= N <= 1,000,000
+ * 입력 : 216
+ * */
 
 public class Main {
+	
 	public static void main(String[] args) {
 		
-		// N이 주어졌을때 그의 가장 작은 생성자를 구하는 프로그램을 작성
-		
-		// 문자 입력받기
+		// 반복문 돌려서 찾아야되겠지뭐
+		// 분해합을 구하는 코드를 작성해
+		// 분해합이 216일때 생성자를 프린트
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
 		
-		// 분해합을 구하는 부분
-		// M을 한글자씩 잘라 int형태로 리스트에 넣기
-		for(int i=1; i<=1000000; i++) {
-			String M = Integer.toString(i);
-			String[] StringMArray = M.split("");
-			List<Integer> IntMArray = new ArrayList<>();
-			for(String n : StringMArray) {
-				int n2 = Integer.parseInt(n);
-				IntMArray.add(n2);
-			}
-			// 더하기
-			int sum = Integer.parseInt(M);
-			for(int j : IntMArray) {
-				sum += j;
+		// 범위내 모든 자연수 i의 분헤합을 구하는 코드, 즉 i가 생성자!
+		int sum=0;
+		for(int i=1; i<N; i++) {
+			
+			String k = Integer.toString(i);
+			String[] arr = k.split("");
+			sum = i;
+			for(int j=0; j<arr.length; j++) {
+				sum += Integer.parseInt(arr[j]);
 			}
 			
-			if(sum==N) {
-				System.out.println(M);
-				System.exit(0);
+			if(sum == N) {
+				System.out.println(i);
+				break;
 			}
 		}
 		
-		System.out.println("0");
+		// 생성자가 없는경우 0을 출력
+		if(sum != N) {
+			System.out.println("0");
+		}
 	}
-	
-}
 
+}
