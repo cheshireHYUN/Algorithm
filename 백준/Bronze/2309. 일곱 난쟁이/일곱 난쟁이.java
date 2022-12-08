@@ -1,44 +1,55 @@
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
-public class Main {
+/* #2309. 일곱난쟁이
+ * 난쟁이가 일곱이 아니라 아홉..
+ * 일곱난쟁이의 키 합은 100, 일곱난쟁이를 찾아라!
+ * 입력 : 20 7 23 19 10 15 25 8 13
+ * 출력 : 일곱난쟁이 키를 오름차순으로 출력
+ * 
+ * 반례: 답이 여러개일경우
+ * */
 
+public class Main {
 	public static void main(String[] args) {
 		
+		// 1. 입력받기
 		Scanner sc = new Scanner(System.in);
-		List list = new ArrayList<>();
-		
-		int sum = 0;
+		List <Integer> allDwarf = new ArrayList<> ();
+		int total = 0;
 		for(int i=0; i<9; i++) {
-			int a =sc.nextInt();
-			list.add(a);
-			sum += a; 
+			int input = sc.nextInt();
+			allDwarf.add(input);
+			total += input;
 		}
-		Collections.sort(list);
 		
-		int spy1=0;
-		int spy2=0;
-		// point : 일곱난쟁이의 키의 합은 100이니까 전체합에서 두명을뺀게 100인 경우를
-		// 완전탐색! 브루트포스한다~
-		for(int i=0; i<list.size()-1; i++) {
-			for(int j=i+1; j<list.size(); j++) {
-				if(sum-((int)list.get(i)+(int)list.get(j))==100) {
-					spy1 = i;
-					spy2 = j;
+		// 2. 미리 정렬
+		allDwarf.sort(Comparator.naturalOrder());
+		
+		// 3. for문 돌며 합이 100인조합 찾아내기
+		for(int i=0; i<8; i++) {
+			int end = 0;
+			for(int j=i+1; j<9; j++) {
+				int sum = total;
+				sum = sum-allDwarf.get(i)-allDwarf.get(j);
+				if(sum==100) {
+					// 3. 가짜 빼고 오름차순 출력
+					for(int a = 0; a<9; a++) {
+						if( (a!=i) && (a!=j) ) {
+							System.out.println(allDwarf.get(a));
+						}
+					}
+					end = 1 ;
 					break;
 				}
 			}
-		}
-		
-		for(int i=0; i<list.size(); i++) {
-			if(i==spy1 || i==spy2) {
-				continue;
+			if(end == 1) {
+				return;
 			}
-			System.out.println(list.get(i));
 		}
-		
 	}
-}
 
+
+}
