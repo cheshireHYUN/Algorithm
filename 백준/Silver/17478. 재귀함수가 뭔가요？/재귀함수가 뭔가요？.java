@@ -9,7 +9,7 @@ public class Main {
 		sbr = new StringBuilder();
 		sbr.append("어느 한 컴퓨터공학과 학생이 유명한 교수님을 찾아가 물었다.\n");
 		solution(0);
-		System.out.println(sbr);
+		System.out.println(sbr);  
 	}
 	
 	private static void solution(int idx) {
