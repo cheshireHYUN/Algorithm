@@ -10,6 +10,7 @@ public class Main {
 	static int N, selected[];
 	static boolean checked[];
 	static StringBuilder sb = new StringBuilder();
+	static StringBuilder result = new StringBuilder();
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		N = Integer.parseInt(br.readLine());
@@ -23,20 +24,19 @@ public class Main {
 			solution(1);
 			sb.delete(sb.length()-1, sb.length());
 		}
+		System.out.println(result);
 	}
 
 	private static void solution(int cnt) {
 		//소수가 아니면, 즉 false이면 더이상 구하지 않고 return한다.
-		if(!isPrime()) {
-			return;
-		}
+		if(!isPrime()) return;
+		
 		if(cnt == N) {
-			System.out.println(sb);
+			result.append(sb).append("\n");
 			return;
 		}
 		
 		for(int i=1; i<10; i++) { //0이 나오는순간 소수아니므로 1부터 돈다
-			//selected[cnt] = i;
 			sb.append(i);
 			solution(cnt+1);
 			sb.delete(sb.length()-1, sb.length());
