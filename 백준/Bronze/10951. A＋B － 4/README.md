@@ -1,4 +1,4 @@
-# [Bronze III] A+B - 4 - 10951 
+# [Bronze V] A+B - 4 - 10951 
 
 [문제 링크](https://www.acmicpc.net/problem/10951) 
 
@@ -8,7 +8,7 @@
 
 ### 분류
 
-사칙연산(arithmetic), 구현(implementation), 수학(math)
+구현, 사칙연산, 수학
 
 ### 문제 설명
 
