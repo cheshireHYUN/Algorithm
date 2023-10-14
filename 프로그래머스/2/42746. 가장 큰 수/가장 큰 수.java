@@ -16,7 +16,7 @@ class Solution {
             String str = String.valueOf(numbers[i]);
             arr[i] = str;
         }
-        //2. 사전 내림차순으로 정렬
+        //2. 이어붙였을때 가장 큰 숫자가 앞에오도록 정렬
         Arrays.sort(arr, (o1,o2) -> (o2+o1).compareTo(o1+o2));
         
         //3. 예외처리
