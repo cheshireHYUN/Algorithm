@@ -11,25 +11,19 @@ import java.util.*;
 class Solution {
     public int solution(int[] citations) {
         Arrays.sort(citations);
-        System.out.println(Arrays.toString(citations));
-        int h = 1;
-        int max = 0;
-        int answer = 0;
+        int h = 0, max = 0, answer = 0;
         
-        while(h<1000){
-            System.out.print(h+"번 이상 인용된 논문을 탐색 >> ");
+        while(h<=10000){
             int cnt= 0;
             for(int i=0; i<citations.length; i++){
                 if(h<=citations[i]) cnt++;
             }
             
-            System.out.println(cnt+"개가 탐색됨");
             if(h<=cnt) { //h번 이상 인용된 논문(cnt)이 h개 이상이라면
                 max = cnt;
                 answer = h;
-                System.out.println("h-index update : "+answer);
             }
-            else break;
+            else break; //h번이상 인용된논문(cnt)가 h개보다 작으면 더이상 탐색할필요 없음
             h++;            
         }
         
