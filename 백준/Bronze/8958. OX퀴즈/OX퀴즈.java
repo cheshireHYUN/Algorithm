@@ -1,44 +1,30 @@
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
+/** OX퀴즈
+ * OOXXOXXOOO의 경우 연속된 O의 갯수를 그자리에 넣어 계산
+ * 즉 1+2+1+1+2+3 = 10점임
+ * 풀이 : 반복문 돌면서 누적O갯수를 변수에 따로 저장하면서 sum을 동시에 계산
+ */
 public class Main {
-	
-	public static void main(String[] args) {		
-		Scanner sc = new Scanner(System.in);
-		ArrayList quizList = new ArrayList();
-		String[] splitList = null;
-		ArrayList countList = new ArrayList();
-		
-		
-		int testCase = sc.nextInt();
-		// quizList 라는 리스트에 xxxxoooo xoxoxoxo 이런애들이 들어가게 된다
-		for(int i=0; i<testCase; i++) {
-			String quiz = sc.next();
-			quizList.add(quiz);
-		}
-		
-		for(int i=0; i<quizList.size(); i++){
-			int count=0;
-			int sum =0;
-			splitList = ((String) quizList.get(i)).split("");
-			for(int j=0; j<splitList.length; j++) {
-				// i번째 splitList의 요소(OOXXOXOXX)의 길이만큼 돌면서 O의 갯수를 카운트해 리스트에 넣자
-				if(splitList[j].equals("O")) {
-					count += 1;
-					countList.add(count);
-				}else {
-					count = 0;
-				}
-			}
-			for(int k=0; k<countList.size();k++) {
-				sum += (int)countList.get(k);
-			}
-			System.out.println(sum);
-			countList.clear();
-			splitList = null;
-		}
-		
-
-		
-	}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine());
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i<T; i++){
+            int sum = 0;
+            int cnt = 0;
+            char[] arr = br.readLine().toCharArray();
+            for(char c : arr){
+                if(c=='O') {
+                    cnt += 1;
+                    sum += cnt;
+                }else cnt = 0;
+            }
+            sb.append(sum).append("\n");
+        }
+        System.out.println(sb);
+    }
 }
