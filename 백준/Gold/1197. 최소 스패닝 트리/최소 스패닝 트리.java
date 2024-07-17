@@ -2,95 +2,82 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.StringTokenizer;
 
-/** 최소스패닝트리
- * 
- * 그래프가 주어졌을때 그 그래프의 최소 스패닝 트리를 구하는 프로그램을 작성하라
- * 최소 스패닝트리 = 주어진 그래프의 모든 정점을 연결하는 부분 중에서 그 가중치합이 최소인 트리이다.
- * 그래프의 정점은 1번부터 V번까지 번호가 매겨져있고 임의의 두 정점사이의 경로가 있다.
- * 
- * input : 첫줄에 정점갯수 V와 간선갯수 E가 주어진다.
- * 			다음 E개의 줄에 간선정보가 주어진다. 정점,정점,가중치가 주어지며 가중치는 음수도 나옴
- * output : 첫째줄에 최소스패닝트리의 가중치를 출력한다.
- * 
- * 풀이 : 최소신장 트리의 풀이법은 크루스칼(간선 오름차순 정렬후 사이클안되는 간선 V-1만큼 선택)이랑 프림(임의의 정점의 간선중 작은걸 택하며 풀어나감)
- * 난.. 크루스칼로 풀어보겠긔
- * 
+/** 최소 스패닝 트리
+ * 최소스패닝트리 : 주어진 그래프의 모든 정점을 연결하는 부분그래프 중 가중치 합이 최소인 트리
+ * 풀이 : MST의 대표적인 풀이두개는 (1) 크루스칼 (2) 프림
+ * (1) 크루스칼 : 간선중심! 즉 간선을 정렬해두고 작은것부터 선택하면서 사이클이 아닌 MST가 되도록함
+ * (2) 프림 : 정점중심! 임의의 정점을 선택하고 연결간선중 가장 작은걸 선택해 전개 (주의 : 고려할 간선은 모든 선택정점의 간선들임)
+ * 둘다 풀어보면 좋겠지만 오늘은 우선 크루스칼로 먼저 풀어보자!
+ * Union&Find를 사용한다!
  */
 public class Main {
-	static class Node implements Comparable<Node>{
-		private int to;
-		private int from;
-		private int weight;
-		
-		Node(int to, int from, int weight){
-			this.to = to;
-			this.from = from;
-			this.weight = weight;
-		}
+    static class Node implements Comparable<Node> {
+        int to;
+        int from;
+        int cost;
+        public Node(int to, int from, int cost) {
+            this.to = to;
+            this.from = from;
+            this.cost = cost;
+        }
+        @Override
+        public int compareTo(Node o){
+            return this.cost - o.cost;
+        }
+    }
+    static ArrayList<Node> list = new ArrayList<>();
+    static int[] parents;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int V = Integer.parseInt(st.nextToken()); //정점갯수
+        int E = Integer.parseInt(st.nextToken()); //간선갯수
 
-		@Override
-		public int compareTo(Node o) {
-			return this.weight - o.weight;
-		}
-	}
-	
-	static int[] parents;
-	static int V,E;
-	//make, union, find 메소드 필요
-	public static void make() {
-		parents = new int[V+1];
-		for(int i=1; i<V; i++) parents[i] = i;
-	}
-	
-	public static boolean union(int a, int b) {
-		if(find(a) == find(b)) return false;
-		
-		parents[find(a)] = parents[find(b)];
-		return true;
-	}
-	
-	public static int find(int a) {
-		if(parents[a] == a) return a;
-		return parents[a] = find(parents[a]);
-	}
-	
-	
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		V = Integer.parseInt(st.nextToken());
-		E = Integer.parseInt(st.nextToken());
-		
-		List<Node> list = new ArrayList<>();
-		
-		for(int i=0; i<E; i++) {
-			st = new StringTokenizer(br.readLine());
-			int to = Integer.parseInt(st.nextToken());
-			int from = Integer.parseInt(st.nextToken());
-			int weight = Integer.parseInt(st.nextToken());
-			list.add(new Node(to,from,weight));
-		}
-		
-		//크루스칼 : 간선을 오름차순 정렬한 뒤 사이클이 아닌, 즉 union의 결과가 true인 간선들을 V-1개 선택한다.
-		Collections.sort(list);
-		//부모 초기화
-		make();
-		
-		int answer = 0;
-		int cnt = 0;
-		for(Node n : list) {
-			if(union(n.from,n.to)) {
-				answer += n.weight;
-				cnt++;
-			}
-			if(cnt==V-1) break;
-		}
-		
-		System.out.println(answer);
-	}
+        //각 간선정보를 list에 저장
+        for(int i=0; i<E; i++){
+            st = new StringTokenizer(br.readLine());
+            list.add(new Node(Integer.parseInt(st.nextToken()),
+                    Integer.parseInt(st.nextToken()),
+                    Integer.parseInt(st.nextToken())));
+        }
+
+        //list를 간선의 cost가 적은순으로 정렬
+        Collections.sort(list);
+
+        //부모(root)정보를 저장하는 배열을 셋팅
+        // 1부터 시작함, 처음엔 연결X이므로 자기자신이 루트
+        parents = new int[V+1];
+        for(int i=1; i<V+1; i++) parents[i] = i;
+
+        //간선을 하나씩 선택한다.
+        int sum = 0, cnt = 0;
+        for(Node n : list){
+            if(union(n.from, n.to)){
+                sum += n.cost;
+                cnt++;
+
+                if(cnt == V-1) break;
+            }
+        }
+        System.out.println(sum);
+    }
+
+    //유니온 : 같은 사이클이 아닌 노드라면 연결한다
+    public static boolean union(int from, int to){
+        int fromRoot = find(from);
+        int toRoot = find(to);
+
+        if(fromRoot == toRoot) return false;
+        else parents[toRoot] = fromRoot;
+        return true;
+    }
+    
+    //파인드 : 같은사이클인지 검사한다. 즉 부모를 찾는다
+    public static int find(int v){
+        if(parents[v] == v) return v;
+        else return parents[v] = find(parents[v]);
+    }
 }
