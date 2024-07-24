@@ -4,35 +4,26 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-/** 좌표 정렬하기
- * 2차원 평면위에 점N개가 있고, y가 증가하는 순으로, y가 같으면 x 증가하는 순으로 정렬하라
- * 풀이 : Comparable의 compareTo를 구현하여 정렬한다. 이번엔 람다를 이용해볼까?
+/** 좌표 정렬하기 2
+ * 2차원 평면 위의 점 N개가 있을때 y좌표증가 -> 같으면 x좌표 증가하도록 출력
  */
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
-        StringTokenizer st;
         int[][] arr = new int[N][2];
-
-        for(int i=0; i<N; i++){
+        StringTokenizer st;
+        for(int i=0; i<N; i++) {
             st = new StringTokenizer(br.readLine());
-            arr[i][0] = Integer.parseInt(st.nextToken());
-            arr[i][1] = Integer.parseInt(st.nextToken());
+            arr[i] = new int[]{Integer.parseInt(st.nextToken()),Integer.parseInt(st.nextToken())};
         }
-
-        Arrays.sort(arr, (a1,a2) -> {
-            if(a1[1] == a2[1]) return a1[0]-a2[0];
-            else return a1[1]-a2[1];
+        Arrays.sort(arr, (a,b) ->{
+            if(a[1] == b[1]) return a[0]-b[0];
+            else return a[1]-b[1];
         });
 
         StringBuilder sb = new StringBuilder();
-        for(int[] a : arr){
-            for(int b : a){
-                sb.append(b).append(" ");
-            }
-            sb.append("\n");
-        }
+        for(int[] i : arr) sb.append(i[0]).append(" ").append(i[1]).append("\n");
         System.out.println(sb);
     }
 }
