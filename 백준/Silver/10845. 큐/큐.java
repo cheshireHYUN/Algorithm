@@ -6,48 +6,75 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 /** 큐
- * 정수를 저장하는 큐를 구현한 다음 입력으로 주어지는 명령을 처리하는 프로그램을 작성
  */
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
-        Queue<Integer> q = new ArrayDeque<>();
         StringTokenizer st;
-        StringBuilder sb = new StringBuilder();
-        int last = 0;
-
         for(int i=0; i<N; i++){
             st = new StringTokenizer(br.readLine());
             String str = st.nextToken();
-            switch (str){
+            switch (str) {
                 case "push" : {
-                    last = Integer.parseInt(st.nextToken());
-                    q.offer(last);
-                    break;
-                }
-                case "pop" : {
-                    sb.append(q.isEmpty()? -1 :q.poll()).append("\n");
-                    break;
-                }
-                case "size" : {
-                    sb.append(q.size()).append("\n");
-                    break;
-                }
-                case "empty" : {
-                    sb.append(q.isEmpty()? 1 : 0).append("\n");
+                    int value = Integer.parseInt(st.nextToken());
+                    pushValue = value;
+                    push(value);
                     break;
                 }
                 case "front" : {
-                    sb.append(q.isEmpty()? -1 : q.peek()).append("\n");
+                    front();
                     break;
                 }
                 case "back" : {
-                    sb.append(q.isEmpty()? -1 : last).append("\n");
+                    back();
+                    break;
+                }
+                case "size" : {
+                    size();
+                    break;
+                }
+                case "empty" : {
+                    empty();
+                    break;
+                }
+                case "pop" : {
+                    pop();
                     break;
                 }
             }
         }
         System.out.println(sb);
+    }
+
+    static StringBuilder sb = new StringBuilder();
+    static Queue<Integer> q = new ArrayDeque<>();
+    static int pushValue = 0;
+    private static void push(int value){
+        q.offer(value);
+    }
+
+    private static void pop(){
+        if(q.size() == 0) sb.append(-1).append("\n");
+        else sb.append(q.poll()).append("\n");
+    }
+
+    private static void size(){
+        sb.append(q.size()).append("\n");
+    }
+
+    private static void empty(){
+        if(q.size() == 0) sb.append(1).append("\n");
+        else sb.append(0).append("\n");
+    }
+
+    private static void front(){
+        if(q.size() == 0) sb.append(-1).append("\n");
+        else sb.append(q.peek()).append("\n");
+    }
+
+    private static void back(){
+        if(q.size() == 0) sb.append(-1).append("\n");
+        else sb.append(pushValue).append("\n");
     }
 }
