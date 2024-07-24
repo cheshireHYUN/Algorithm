@@ -1,31 +1,36 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.HashMap;
+import java.util.StringTokenizer;
 
 /** 숫자카드 2
- * 정수하나가 적혀진 카드이다. 상근이가 N개를 가지고 있고 정수 M개가 주어졌을때
- * 이 수가 적혀있는 숫자카드를 상근이가 몇개 가지고 있는지 구하는 프로그램을 작성하라.
- * 풀이 : 아까랑 다르게 이번엔 Map을 사용하면 될듯 시간복잡도 마찬가지로 O(1)
+ * 상근이꺼N개하고 그냥M개 카드 주어졌을때 상근이가 몇개 갖고있는지 구해라
+ * 이번엔 map을 이용하면 되겠다
  */
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine()); //상근이가 가진 숫자카드 갯수
-        StringTokenizer st = new StringTokenizer(br.readLine()); //숫자카드에 적힌 정수
-        Map<Integer, Integer> map = new HashMap();
-        for(int i=0; i<N; i++) {
+        int N = Integer.parseInt(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        HashMap<Integer,Integer> map = new HashMap<>();
+        for(int i=0; i<N; i++){
             int key = Integer.parseInt(st.nextToken());
-            map.put(key, map.getOrDefault(key,0)+1);
+            int value = map.getOrDefault(key,0);
+            map.put(key,value+1);
         }
 
-        StringBuilder sb = new StringBuilder();
         int M = Integer.parseInt(br.readLine());
         st = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
         for(int i=0; i<M; i++) {
-            int num = Integer.parseInt(st.nextToken());
-            sb.append(map.get(num) == null? 0 : map.get(num)).append(" ");
+            Integer value = map.get(Integer.parseInt(st.nextToken()));
+            sb
+            .append( value == null ? 0 : value)
+            .append(" ");
         }
+
+
         System.out.println(sb);
     }
 }
