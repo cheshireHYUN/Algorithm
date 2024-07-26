@@ -4,25 +4,21 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 /** 최대상승
- * N일간 주가가 주어지고, 언제사서 언제팔면 최대이득을 얻을지 구해라. (사자마자 팔수있으니 최소는 0)
- * (풀이) 완전탐색하면 시간초과 날거고, 그리디로 푸는 문제..
- * 왼쪽부터 순회하면서 가장 작은값을 찾는 동시에 최솟값 계산도 하면 된다.
- * 즉 3 10 1 5 이런식으로 나오면 i=1일때 최소는 3과 최대차이는 7, i=2일때 최소는 1 최대는 7, i=3일때 최소는 1 최대는 여전히 7!
- * 즉.. 현재 가능한 최솟값에서 현재가격을 뺐을때 최대인것을 각각 남기면 됨.
+ * N일간 가장 이득을 얻을수있게 주식 사고파는 날짜 정하기
+ * 즉 현재 샀을때 기준으로 가장 높은가격에 팔 수 있는날을 찾자.
+ * 순서대로 진행하면서 차액을 MAX로 기록하고, 최솟값도 따로 관리하면서 계산..
  */
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
         StringTokenizer st = new StringTokenizer(br.readLine());
-
-        int minValue = Integer.parseInt(st.nextToken());
-        int benefit = 0;
-        for(int i=1; i<N; i++){
-            int curr = Integer.parseInt(st.nextToken());
-            benefit = Math.max(benefit, curr-minValue);
-            minValue = Math.min(minValue, curr);
+        int minValue=Integer.parseInt(st.nextToken()), maxBenefit=0;
+        for(int i=1; i<N; i++) {
+            int now = Integer.parseInt(st.nextToken());
+            minValue = Math.min(now, minValue);
+            maxBenefit = Math.max(now-minValue, maxBenefit);
         }
-        System.out.println(benefit);
+        System.out.println(maxBenefit);
     }
 }
