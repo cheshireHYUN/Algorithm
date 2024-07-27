@@ -1,94 +1,93 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Date;
 import java.util.StringTokenizer;
 
-/** 연도진행바
- * 올해가 몇 %지났는지 출력하라
- * 평년일 때, 각 달은 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31일이 있다. 윤년에는 2월이 29일이다.
- * 윤년은 그 해가 400으로 나누어 떨어지는 해 이거나, 4로 나누어 떨어지면서, 100으로 나누어 떨어지지 않는 해 일때이다.
+/** 연도 진행바
+ * 이번해가 얼마나 지났는지 출력하는 프로그램 작성
+ * 각 달은 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+ * 윤년엔  31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+ * 윤년은 400으로 나누어 떨어지거나 4로나누어떨어지면서 100으로 나누어 떨어지지 않는 해임
  */
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int month = transformMonth(st.nextToken());
-        int day = Integer.parseInt(st.nextToken().substring(0,2));
-        int year = Integer.parseInt(st.nextToken());
-        st = new StringTokenizer(st.nextToken(),":");
-        int hour = Integer.parseInt(st.nextToken());
-        int minute = Integer.parseInt(st.nextToken());
-
-        //윤년 변환
-        int[] lastDays = new int[]{0,31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-        if(year%400==0 || (year%4==0 && year%100 !=0)) lastDays[2] = 29;
-
-        //해당 년도를 분으로 변환
-        int sumLastDays = 0;
-        for(int i : lastDays) sumLastDays+= i;
-        int AllTime = sumLastDays*24*60;
+        int nowMonth = getMonth(st.nextToken());
+        String d = st.nextToken();
+        int nowDay = Integer.parseInt(d.substring(0,d.length()-1));
+        int nowYear = Integer.parseInt(st.nextToken());
+        String[] h = st.nextToken().split(":");
+        int nowHour = Integer.parseInt(h[0]);
+        int nowMin = Integer.parseInt(h[1]);
         
-        //진행된 날짜 구하기
-        int nowDays = 0;
-        for(int i=1; i<month; i++)  nowDays+=lastDays[i];
-        double nowTime = (nowDays+(day-1))*24*60 + 60*hour + minute;
+        //윤년인지 판단하여 분모, 분자를 구함
+        int[] allMonth = new int[]{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        if(isYear(nowYear)) allMonth[2] = 29;
 
-        System.out.println(nowTime*100/AllTime);
+        int fullMin = getFullMin(allMonth);
+
+        int nowDays = 0;
+        for(int i=1; i<nowMonth; i++) nowDays+= allMonth[i];
+
+        int now = (nowDays + nowDay-1)*24*60 + nowHour*60 + nowMin;
+
+        double result = ((double) now) / fullMin * 100;
+
+        System.out.println(result);
     }
 
-    static int transformMonth(String str){
-        int result= 0;
+    private static int getFullMin(int[] allMonth){
+        int sumDays = 0;
+        for(int m : allMonth) sumDays+=m;
+        //전체일수 * 24시간 * 60분
+        return sumDays*24*60;
+    }
+
+    private static boolean isYear(int nowYear){
+        if(nowYear%400==0 || (nowYear%4==0 && nowYear%100!=0)) return true;
+        return false;
+    }
+
+    private static int getMonth(String str){
         switch (str){
-            case("January"): {
-                result = 1;
-                break;
+            case "January" : {
+                return 1;
             }
-            case("February"): {
-                result = 2;
-                break;
+            case "February" : {
+                return 2;
             }
-            case("March"):{
-                result = 3;
-                break;
+            case "March" : {
+                return 3;
             }
-            case("April"):{
-                result = 4;
-                break;
+            case "April" : {
+                return 4;
             }
-            case("May"):{
-                result = 5;
-                break;
+            case "May" : {
+                return 5;
             }
-            case("June"):{
-                result = 6;
-                break;
+            case "June" : {
+                return 6;
             }
-            case("July"):{
-                result = 7;
-                break;
+            case "July" : {
+                return 7;
             }
-            case("August"):{
-                result = 8;
-                break;
+            case "August" : {
+                return 8;
             }
-            case("September"):{
-                result = 9;
-                break;
+            case "September" : {
+                return 9;
             }
-            case("October"):{
-                result = 10;
-                break;
+            case "October" : {
+                return 10;
             }
-            case("November"):{
-                result = 11;
-                break;
+            case "November" : {
+                return 11;
             }
-            case("December"):{
-                result = 12;
-                break;
+            case "December" : {
+                return 12;
             }
         }
-        return result;
+        return 0;
     }
 }
