@@ -1,65 +1,61 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.util.*;
 
-/** 케빈 베이컨의 6단계법칙
- * 케빈베이컨의 수 : 자신을 제외한 나머지 사람들과의 최단거리 다 더한것
- * 한 정점에서 모든정점으로의 최단거리를 구하는 것은 다익스트라를 이용한다.
- * 모든 정점에서 모든 정점으로의 최단거리를 구하는 것은 플루이드워셜을 이용한다.
- * BFS로도 풀 수 있겠지만 일단 플루이드 워셜을 연습해보도록 하자
- * 플루이드 워셜 : 주어진 최단거리는 따로 저장해두고,
- * 이제 각 정점을 경유노선으로서 업데이트 Dac = Min(Dac, Dab+Dbc);
- *
- * 주의 : MAX여도 MAX_VLAUE를 넣으면 overflow가 나오면서 쓰레기값이 나올 수 있으니 주의하자.
+/** 케빈베이컨 법칙
+ * 케빈베이컨 : 케빈베이컨의 수가 가장 작은사람을 찾자(즉 모든사람과 연관된 길이가 가장 작은사람)
+ * 모든정점으로부터 모든 정점까지의 거리의 최단거리를 구해야한다. 즉 플로이드-워셜을 구한다.
+ * 플로이드워셜은 간단하다. 3중for문을 사용하며, 시작점, 출발점, 그리고 경유점을 고려한다.
+ * Dab > Dac+Dcb 일때, Dab = Dac+Dcb로 바꿔준다.
  */
 public class Main {
+    static int N,M,map[][];
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken()); //유저의 수
-        int M = Integer.parseInt(st.nextToken()); //친구관계의 수
-
-        int[][] matrix = new int[N+1][N+1];
-
-        for(int i=1; i<=N; i++){
-            Arrays.fill(matrix[i], N);
-            matrix[i][i] = 0;
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        map = new int[N + 1][N + 1];
+        for (int i = 1; i < N + 1; i++) {
+            Arrays.fill(map[i], N);
+            map[i][i] = 0;
         }
-
-        for(int i=1; i<=M; i++){
+        for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-            matrix[a][b] = 1;
-            matrix[b][a] = 1;
+            int start = Integer.parseInt(st.nextToken());
+            int end = Integer.parseInt(st.nextToken());
+            map[start][end] = 1;
+            map[end][start] = 1;
         }
 
-        System.out.println(floyd_warshall(matrix));
+        System.out.println(solution());
     }
 
-    private static int floyd_warshall(int[][] matrix) {
-        for(int mid=1; mid<matrix.length; mid++){ //경유노드
-            for(int start=1; start<matrix.length; start++){ //시작노드
-                for(int end=1; end<matrix.length; end++){ //목적노드
-                    if(matrix[start][end] > matrix[start][mid]+matrix[mid][end]){
-                        matrix[start][end] = matrix[start][mid]+matrix[mid][end];
+    private static int solution(){
+        //플루이드 워셜
+        for(int mid=1; mid<N+1; mid++){
+            for(int start=1; start<N+1; start++){
+                for(int end=1; end<N+1; end++){
+                    if(map[start][end] > map[start][mid]+map[mid][end]){
+                        map[start][end] = map[start][mid]+map[mid][end];
                     }
                 }
             }
         }
         
-        //케빈베이컨의 수 가장 작은 사람 구하기
-        int[] bacon = new int[matrix.length];
-        int min = 1;
-        for(int i=1; i<matrix.length; i++){ //경유노드
-            for(int j=1; j<matrix.length; j++) { //시작노드
-                if(i!=j) bacon[i] += matrix[i][j];
+        //케빈베이컨이 가장 작은 사람. 즉 한 행의 모든 열값을 합했을때의 값이 가장 작은사람
+        int minPerson = 0, minValue=Integer.MAX_VALUE;
+        for(int start=1; start<N+1; start++) {
+            int sum = 0;
+            for (int end = 1; end < N+1; end++) {
+                sum += map[start][end];
             }
-            if(bacon[i] < bacon[min]) min = i;
+            if(sum < minValue) {
+                minValue = sum;
+                minPerson = start;
+            }
         }
-
-        return min;
+        return minPerson;
     }
 }
