@@ -3,23 +3,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /** 수들의 합
- * 서로다른 N개의 자연수 합이 S고, S를 안다면 N의 최댓값은 무엇일까?
- * 풀이 : 가장 작은수들을 이용해서 더해서 S가 되는 N개를 구해야됨..
- * 즉 그냥 계속 더하다가 엥 다음수 더하면 넘네? 하기 직전수의 갯수를 말하면 되지않나~
+ * 서로 다른 N개의 자연수 합이 S일때 자연수 N의 최댓값?
+ * 풀이 : 합이 S가 되기 직전까지 자연수를 더한뒤 리턴
  */
 public class Main {
     public static void main(String[] args) throws IOException {
-        //S가 42억이라 Long써야됨
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        Long S = Long.parseLong(br.readLine());
-
-        Long i =1L;
-        Long sum = 1L;
-        for(i=2L; i<S; i++){
+        Long N = Long.parseLong(br.readLine());
+        Long sum=0L, max=0L;
+        for(Long i=1L; i<=N; i++){
             sum += i;
-            if(sum>S) break;
+            if(sum >= N) {
+                if(sum == N) max=i;
+                else max=i-1;
+                break;
+            }
         }
-
-        System.out.println(i-1L);
+        System.out.println(max);
     }
 }
