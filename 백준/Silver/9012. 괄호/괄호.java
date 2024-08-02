@@ -5,33 +5,37 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 
 /** 괄호
- * ()짝을 VPS라고 부른다. VPS인지 아닌지 판단해라
- * 풀이 : 스택을 이용해서 (((가 push된만큼 )))가 팝되어야함. push안됐는데 pop할라하면 안됨 주의
+ * stack을 이용하여 (일때 push )일때 pop한다. push할게없는데 pop하려고 하면 NO
+ * 맨 마지막에 stack이 비어있지 않아도 NO
  */
 public class Main {
-    static StringBuilder sb = new StringBuilder();
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int T =Integer.parseInt(br.readLine());
-        for(int t=0; t<T; t++){
-            char[] arr = br.readLine().toCharArray();
-            if(solution(arr)) sb.append("YES").append("\n");
-            else sb.append("NO").append("\n");
-        }
-        System.out.println(sb);
-    }
+        int T = Integer.parseInt(br.readLine());
+        StringBuilder sb = new StringBuilder();
 
-    private static boolean solution(char[] arr){
-        Stack<Character> stack = new Stack<>();
-        for(char c : arr){
-            if(c=='(') stack.push(c);
+        for(int i=0; i<T; i++){
+            char[] arr = br.readLine().toCharArray();
+            Stack<Character> stack = new Stack<>();
+            boolean flag = true;
+            for(char c : arr){
+                if(c=='(') stack.push(c);
+                else {
+                    if(stack.isEmpty()) {
+                        flag = false;
+                        break;
+                    }
+                    stack.pop();
+                }
+            }
+            if(!flag) sb.append("NO").append("\n");
             else {
-                if(stack.size() == 0) return false;
-                if(stack.peek() == '(') stack.pop();
-                else return false;
+                if(stack.isEmpty()) sb.append("YES").append("\n");
+                else sb.append("NO").append("\n");
             }
         }
-        if(stack.isEmpty()) return true;
-        else return false;
+
+        System.out.println(sb);
+
     }
 }
