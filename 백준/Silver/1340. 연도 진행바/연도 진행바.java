@@ -3,50 +3,42 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-/** 연도 진행바
- * 이번해가 얼마나 지났는지 출력하는 프로그램 작성
- * 각 달은 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
- * 윤년엔  31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
- * 윤년은 400으로 나누어 떨어지거나 4로나누어떨어지면서 100으로 나누어 떨어지지 않는 해임
+
+/** 연도진행바
+ * 이번해가 몇% 지났는지 계산하라
+ * 풀이 : 형변환 주의, 윤년에따라 분모분자 다바뀜주의, 계산결과는 소수점이 필요함에 주의
  */
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int nowMonth = getMonth(st.nextToken());
-        String d = st.nextToken();
-        int nowDay = Integer.parseInt(d.substring(0,d.length()-1));
-        int nowYear = Integer.parseInt(st.nextToken());
-        String[] h = st.nextToken().split(":");
-        int nowHour = Integer.parseInt(h[0]);
-        int nowMin = Integer.parseInt(h[1]);
-        
-        //윤년인지 판단하여 분모, 분자를 구함
-        int[] allMonth = new int[]{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-        if(isYear(nowYear)) allMonth[2] = 29;
 
-        int fullMin = getFullMin(allMonth);
+        int inputMonth = getMonth(st.nextToken());
+        String str = st.nextToken();
+        int inputDay = Integer.parseInt(str.substring(0, str.length()-1));
+        int inputYear = Integer.parseInt(st.nextToken());
+        st = new StringTokenizer(st.nextToken(),":");
+        int inputHour = Integer.parseInt(st.nextToken());
+        int inputMin = Integer.parseInt(st.nextToken());
 
-        int nowDays = 0;
-        for(int i=1; i<nowMonth; i++) nowDays+= allMonth[i];
 
-        int now = (nowDays + nowDay-1)*24*60 + nowHour*60 + nowMin;
+        int[] monthArr = new int[]{ 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        if(inputYear%400==0 || (inputYear%4==0 && inputYear%100!=0)) monthArr[2] = 29;
 
-        double result = ((double) now) / fullMin * 100;
+        //올해의 총 분 구하기
+        int allMin=0;
+        for(int i : monthArr) allMin+= i;
+        allMin = allMin*24*60;
+
+        //지난 시간(분) 구하기
+        int nowMin = 0;
+        for(int i=1; i<inputMonth; i++) nowMin+= monthArr[i];
+        nowMin = (nowMin+inputDay-1)*24*60+inputHour*60+inputMin;
+
+        double result = 100*nowMin/(double)allMin;
 
         System.out.println(result);
-    }
 
-    private static int getFullMin(int[] allMonth){
-        int sumDays = 0;
-        for(int m : allMonth) sumDays+=m;
-        //전체일수 * 24시간 * 60분
-        return sumDays*24*60;
-    }
-
-    private static boolean isYear(int nowYear){
-        if(nowYear%400==0 || (nowYear%4==0 && nowYear%100!=0)) return true;
-        return false;
     }
 
     private static int getMonth(String str){
