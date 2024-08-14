@@ -1,64 +1,47 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.StringTokenizer;
 
-
-import java.util.*;
-
-/** DFS와 BFS
- * 방문할 수 있는 정점이 여러개인 경우 작은것부터 방문, 정점번호는 1부터 N까지임
- * input : 정점N개와 간선M개, 탐색 시작번호V
- * output : DFS 탐색결과 \n BFS 탐색결과
+/** 연결요소의 갯수
+ * 방향없는 그래프에서 연결요소의 갯수를 찾는 프로그램을 작성하라.
+ * DFS나 BFS로 각자 세도 되고, 유니온앤파인드를 해도 되겠는걸
  */
-
 public class Main {
-	static int[][] arr;
-	static int n,m;
-	static boolean[] check;
+    static int[] parents;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken()); //정점
+        int M = Integer.parseInt(st.nextToken()); //간선
+        parents = new int[N+1];
+        for(int i=1; i<N+1; i++) parents[i] = i;
 
-	public static void DFS(int v) {
-		// 기준노드에 대하여 깊이우선탐색한다
-		if(check[v] == true) {
-			return;
-		}else{
-			check[v] = true;
-			for(int i=1; i<=n; i++) {
-				if(arr[v][i]==1 && check[i]==false) DFS(i);
-			}
-		}
-		
-	}
-	
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		n = sc.nextInt(); //정점번호는 1~n
-		m = sc.nextInt(); //간선갯수
-		
-		arr = new int[n+1][n+1];
-		check = new boolean[n+1];	
-		for(int i=0; i<m; i++) {
-			int x = sc.nextInt();
-			int y = sc.nextInt();
-			arr[x][y] = 1;
-			arr[y][x] = 1; //무방향 그래프이므로
-		}
-		
-		int result = 0;
-//		// 행이 기준노드, 열이 연결노드라고 가정
-//		for(int i=1; i<=n; i++) {
-//			for(int j=1; j<=n; j++) {
-//				//이렇게 하면 arr[i][j]가 0인, 즉 간선이 없는 정점에 대한 처리가 불가능함/
-//				if(arr[i][j]==1 && check[i] == false) { 
-//					DFS(i);
-//					result++;
-//				}
-//			}
-//		}
-		
-		for(int i=1; i<=n; i++) {
-			if(check[i] == false) {
-				DFS(i);
-				result++;
-			}
-		}
-		System.out.println(result);
-		
-	}
+        for(int i=0; i<M; i++){
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            union(a,b);
+        }
+
+        HashSet<Integer> set = new HashSet<>();
+        for(int i=1; i<N+1; i++) set.add(find(parents[i]));
+        System.out.println(set.size());
+    }
+
+    static boolean union(int a, int b){
+        int rootA = find(a);
+        int rootB = find(b);
+
+        if(rootA == rootB) return false;
+        else parents[rootB] = rootA;
+        return true;
+    }
+
+    static int find(int v){
+        if(parents[v] == v) return v;
+        else return parents[v] = find(parents[v]);
+    }
 }
