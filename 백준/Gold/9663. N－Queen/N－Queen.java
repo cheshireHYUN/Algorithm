@@ -5,7 +5,10 @@ import java.io.InputStreamReader;
 /** N퀸
  * N*N인 체스판 위에 퀸 N개를 공격할수없게 놓는다.
  * 참고로 퀸은 상하좌우대각선 아무데나 가고픈만큼 갈수있음
- * (풀이)
+ * (풀이) N개를 놓으려면 결국 한행당 하나씩만 놓을수밖에 없음
+ * 근데 어떤 행에 놓을수가 없다면 그건 망한거니까 다음후보로 가야됨 -> 백트래킹
+ * 즉, 행을 기준으로 무조건 놓은뒤에 validation을 검사해서 ㄱㅊ으면 진행하면돼
+ * validation의 경우 열과 대각선만 체크하면 되겠네
  */
 public class Main {
     static boolean[][] map;
