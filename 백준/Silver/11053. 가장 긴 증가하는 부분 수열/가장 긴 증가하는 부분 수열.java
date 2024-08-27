@@ -1,67 +1,40 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.StringTokenizer;
 
 /** 가장 긴 증가하는 부분수열
- * 
- * 수열 A가 주어졌을때 가장 긴 증가하는 부분수열의 길이를 구하는 프로그램을 작성하라
- * A={10,20,10,30,20,50}인 경우 가장 긴 증가하는 부분수열은 {10,20,30,50}이고 길이는 4이다.
- * 
- * 풀이 : 각 원소의 가장 긴 부분수열 길이를 저장하면 되지않나
- * a[0] = 1일거고
- * a[1] = 이전에 자기보다 작은 원소를 찾아 -> 10-> 1이니까 1+1 해서 2넣음
- * a[2] = 이전에 자기보다 작은 원소 없음 -> 1 넣음
- * a[3] = 30보다 작은원소중 길이 가장 큰것(가장 큰수와 같을듯) -> a[2] -> 2니까 3넣음
- * a[4] = 20보다 작은 원소중 길이 가장 큰것-> a[2] = 1이니까 2넣음
- * a[5] = 50보다 작은 원소중 a[3]+1 = 4
- * 
- * arr[n] = arr[k]+1 <- arr[k]는 n미만중에 가장 큰수..
- */
+ * 수열 A가 주어졌을때, 가장 긴 증가하는 부분 수열을 구하라.
+ * 풀이 : 각 원소의 위치에서 자기 이전에 자기보다 작은데 겹치진 않는 원소의 갯수를 찾는다.
+ * 다만 효율적으로 찾으려면, 이전에 저장된걸 이용하는 방법을 쓴다,
+ * 내가 30이라면 직전인 20까지의 갯수에 +1만 하면됨
+ * {10,20,10,30,20,50}의 경우에서
+ * a[0]=10에서 => 10보다 작은 원소중 길이가 가장 큰것 => 0이므로 len[0]= 0+1 = 1;
+ * a[1]=20에서 => 20보다 작은 원소중 길이가 가장 큰것 => a[0]=10, len[0]=1, len[1]=1+1=2;
+ * a[2]=10에서 => 10보다 작은 원소중 길이가 가장 큰것 => 0이므로 len[2]=0+1=1;
+ * a[3]=30에서 => 30보다 작은 원소중 길이가 가장 큰것 => a[1]=20, len[1]=2, len[3]=2+1=3;
+ * a[4]=20에서 => 20보다 작은 원소중 길이가 가장 큰것 => a[2]=10, len[2]=1, len[4]=1+1=2;
+ * a[5]=50에서 => 50보다 작은 원소중 길이가 가장 큰것 => a[3]=30, len[3]=3, len[5]=3+1=4;
+ * */
 public class Main {
-	static int N, len[], arr[];
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		N = Integer.parseInt(br.readLine());
-		len = new int[N]; //부분수열 길이의 최댓값을 저장한다
-		arr = new int[N];
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		for(int i=0; i<N; i++) arr[i] = Integer.parseInt(st.nextToken());
-		
-		Arrays.fill(len, -1);
-		len[0] = 1;
-		if(N>1) {
-			if(arr[1]>arr[0]) len[1] = 2;
-			else len[1] = 1;
-		}
-		System.out.println(solution());
-		//System.out.println(Arrays.toString(len));
-	}
-	
-	private static int solution() {
-		setLength(N-1); //N-1까지 셋팅한다
-		//가장 큰 길이를 구한다.
-		int max = 1;
-		for(int m : len) max = Math.max(max, m);
-		
-		return max;
-	}
-	
-	//길이배열을 셋팅한다
-	private static int setLength(int n) {
-		if(len[n] != -1) return len[n];
-		else {
-			int max = 0;
-			for(int i=0; i<n; i++) { //앞에서부터 돌면서 값이 자기보다 작은 배열중 가장 큰 길이값을 구한다
-				if(arr[n]>arr[i]) max=Math.max(max, setLength(i));
-			}
-			len[n-1] = setLength(n-1);
-			return len[n] = max+1; //앞의 길이가 있다면 거기에 +1, 없다면 0+1로 셋팅된다.
-		}
-	}
-	
-	//내가 작성한 탑다운 방식의 경우 최초로 구하는 원소의 길이가 1이면(즉 자기보다 작은게 없으면 setLength()자체를 재귀호출하지 않으므로
-	//나머지 값들이 전부 -1이됨..;;
-	
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int[] arr = new int[N];
+        int[] len = new int[N];
+        len[0] = 1;
+        int max = 0;
+        for(int i = 0; i < N; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
+            int preLen = 0;
+            for(int j=0; j<i; j++) {
+                if(arr[j] < arr[i]) preLen = Math.max(len[j], preLen);
+            }
+            len[i] = preLen+1;
+            max = Math.max(max, len[i]);
+        }
+        System.out.println(max);
+    }
 }
