@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 14836 KB, 시간: 88 ms
+메모리: 14604 KB, 시간: 88 ms
 
 ### 분류
 
@@ -12,13 +12,13 @@
 
 ### 제출 일자
 
-2025년 4월 10일 23:54:12
+2025년 4월 11일 00:20:12
 
 ### 문제 설명
 
 <p>색을 표현하는 기본 요소를 이용하여 표시할 수 있는 모든 색 중에서 대표적인 색을 고리 모양으로 연결하여 나타낸 것을 색상환이라고 한다. 미국의 화가 먼셀(Munsell)이 교육용으로 고안한 20색상환이 널리 알려져 있다. 아래 그림은 먼셀의 20색상환을 보여준다.</p>
 
-<p style="text-align: center;"><img alt="" src="" style="width: 284px; height: 287px;"></p>
+<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/069ffaec-e512-4352-bbc4-5ed9a20851ee/-/preview/" style="width: 284px; height: 287px;"></p>
 
 <p style="text-align: center;">그림 1. 먼셀의 20색상환</p>
 

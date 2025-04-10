@@ -14,13 +14,15 @@ import java.util.Set;
  * 1<=K<=N
  *
  * 풀이
- * 냅색문제와 유사하게 풀 수있다.
- * 1번을 칠했을 경우 -> N-2개의 색상중 K-1개를 선택해야함
- * 1번을 칠하지 않았을 경우 -> N-1개의 색상중 K개를 선택해야함.
+ * 1번을 칠했다 -> 2번을 못칠함 -> 남은 N-2개에서 k-1개를 칠해야한다
+ * 1번을 안칠했다 -> N-1개에서 k개를 칠해야한다.
  *
- * dp[i][j] = i개의 색상까지 중에서 j개를 선택하는 방법
- * dp[n][k] = dp[i-2][j-1]+dp[i-1][j]
+ * 따라서 dp[i][j] = dp[i-2][j-1]+dp[i-1][j]
  *
+ * 그런데 이렇게 선형으로 dp를 채우고 나서,
+ * 결국 우리는 원형그래프에 대한 답을 만들어야함.
+ * 따라서 원형그래프에선 1번을 칠하면 2,N번 둘다 못칠하니까 -> 남은 N-3개에서 k-1개를 칠한다.
+ * 결국 답은 dp[n-3][k-1]+dp[n-1][k]
  */
 public class Main {
     static int N,K;
@@ -33,17 +35,17 @@ public class Main {
         K = Integer.parseInt(br.readLine());
         dp = new int[N+1][K+1];
 
-        for(int i=0; i<N+1; i++) {
-            dp[i][1] = i; //하나를 선택하는건 결국 모든 색상 선택하는것
-            dp[i][0] = 1;
-        }
+        dp[1][0] = 1;
+        dp[1][1] = 1;
 
-        for(int i=4; i<N+1; ++i) {
-            for(int j=1; j<=K; ++j) {
-                dp[i][j] = (dp[i-2][j-1]%MOD + dp[i-1][j]%MOD) % MOD;
+        for(int i=2; i<N+1; i++) {
+            for(int j=1; j<K+1; j++) {
+                if(j==1) dp[i][j] = i;
+                else if(i>j) dp[i][j] = (dp[i-2][j-1]%MOD + dp[i-1][j]%MOD) % MOD;
             }
         }
 
-        System.out.println(dp[N][K]);
+        if(K == 1) System.out.println(N);
+        else System.out.println((dp[N-3][K-1]+dp[N-1][K])% MOD);
     }
 }
