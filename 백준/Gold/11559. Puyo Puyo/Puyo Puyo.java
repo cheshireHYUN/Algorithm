@@ -21,10 +21,12 @@ import java.util.*;
  * visited를 받아 dfs를 돌며 true처리 및 List<int[]> 추가
  *
  * 3. List에 저장된 좌표를 터트리는 메소드
- * map[i][j]가 터지면, map[i][j]=map[i-1][j], map[i-1][j]=map[i-2][j].. 이런식으로 반복된다(만약 우변의값이 '.'이면 실행후 반복종료)
- * 위에서부터 터트려야 아래도 확실히 변함에 주의.
+ * 터트려야하는 좌표를 '.'로 바꾼다
  *
- * 4. 위를 반복하며 더이상 터질 뿌요가 없을때 종료
+ * 4. 중력 메소드
+ * 맨밑이 .이 아니게 되도록 모든 뿌요들을 아래로 내린다.
+ *
+ * 5. 위를 반복하며 더이상 터질 뿌요가 없을때 종료
  */
 public class Main {
     static char[][] map = new char[12][6];
@@ -40,6 +42,7 @@ public class Main {
             List<int[]> bombList = find();
             if(bombList.isEmpty()) break;
             bomb(bombList);
+            gravity();
             sum++;
         }
 
@@ -47,18 +50,26 @@ public class Main {
     }
 
     private static void bomb(List<int[]> bombList) {
-        bombList.sort((a1, a2) -> a1[0] - a2[0]);
         for(int[] arr : bombList) {
-            int x = arr[0];
-            int y = arr[1];
-            for(int i=x; i>=0; i--) {
-                if(i==0) map[i][y] = '.';
-                else {
-                    map[i][y] = map[i-1][y];
-                    if(map[i][y] == '.') break;
+            map[arr[0]][arr[1]] = '.';
+        }
+    }
+
+    //어떤 행이 블록이면서, 그 아래행은 .일때만 중력처리를 해줌. 그리고 또 돌면서 중력처리 해주고...
+    private static void gravity() {
+        for(int j=0; j<6; j++) {
+            for(int i=10; i>=0; i--) {
+                if(map[i][j] != '.' && map[i+1][j]=='.') {
+                    int x = i;
+                    while(x+1 < 12 && map[x+1][j] == '.') {
+                        map[x+1][j] = map[x][j];
+                        map[x][j] = '.';
+                        x++;
+                    }
                 }
             }
         }
+
     }
 
     private static List<int[]> find() {
