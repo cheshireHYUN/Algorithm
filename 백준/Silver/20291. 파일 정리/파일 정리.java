@@ -11,17 +11,17 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
-        Map<String, Integer> map = new HashMap<>();
+        Map<String, Integer> map = new TreeMap<>();
         for(int i=0; i<N; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine(),".");
             String title = st.nextToken();
             String extension = st.nextToken();
             map.put(extension, map.getOrDefault(extension, 0)+1);
         }
-        List<String> keyList = new ArrayList<>(map.keySet());
-        Collections.sort(keyList);
         StringBuilder sb = new StringBuilder();
-        for(String key : keyList) sb.append(key).append(' ').append(map.get(key)).append('\n');
+        for(Map.Entry<String, Integer> e : map.entrySet()) {
+            sb.append(e.getKey()).append(' ').append(e.getValue()).append('\n');
+        }
         System.out.println(sb);
     }
 }
