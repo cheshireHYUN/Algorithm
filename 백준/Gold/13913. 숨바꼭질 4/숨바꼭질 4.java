@@ -14,7 +14,7 @@ import java.util.*;
  * 최적화 : parent에 이전노드를 저장해서 역추적을 통해 경로를 만든다!
  */
 public class Main {
-    static int[] parents = new int[200001];
+    static int[] parents = new int[100001];
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -56,12 +56,12 @@ public class Main {
             }
 
             //순간이동 할 경우
-            if(currIndex*2<200001 && parents[currIndex*2]==-1) {
+            if(currIndex*2<100001 && parents[currIndex*2]==-1) {
                 parents[currIndex*2] = currIndex;
                 q.add(currIndex*2);
             }
             //X+1로 갈 경우
-            if(currIndex+1<200001 && parents[currIndex+1]==-1) {
+            if(currIndex+1<100001 && parents[currIndex+1]==-1) {
                 parents[currIndex+1] = currIndex;
                 q.add(currIndex+1);
             }
